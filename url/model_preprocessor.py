@@ -4,7 +4,7 @@ import numpy as np
 
 from sklearn import model_selection
 from string import printable
-from keras.preprocessing import sequence
+from tensorflow.keras.preprocessing import sequence
 
 class Preprocessor:
     def __init__(self):
