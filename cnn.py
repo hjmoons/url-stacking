@@ -59,9 +59,12 @@ class cnn(Model):
         # 위 결과 합침
         merged = concatenate([conv1, conv2, conv3, conv4], axis=1)
 
+        print('########### merges: ', merged)
         hidden1 = self.h1(merged)
         hidden1 = self.el(hidden1)
+        print('########### hidden1: ', hidden1)
         hidden1 = self.bn(hidden1)
+        print('########### hidden1: ', hidden1)
         hidden1 = self.dr(hidden1)
 
         hidden2 = self.h2(hidden1)
