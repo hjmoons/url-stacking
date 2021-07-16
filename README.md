@@ -5,7 +5,7 @@
 
 ### CNN
 
-<p align="center"><img src="img/cnn.png"></p>
+<p align="center"><img src="img/cnn.png" width="300"></p>
 
 - 1차원 시퀀스 데이터인 URL을 분류하기 위해 1DCNN을 사용
 - `특성 추출 단계`: 성능 향상을 위해 다양한 커널 사이즈에서 특징을 추출하도록 커널 사이즈가 서로 다른 4개의 1D Convolution 연산을 사용
@@ -13,7 +13,7 @@
 
 ### LSTM
 
-<p align="center"><img src="img/lstm.png"></p>
+<p align="center"><img src="img/lstm.png" width="300"></p>
 
 - 시퀀스 데이터인 URL을 높은 성능으로 분류하기 위해 사용 
 - LSTM Layer, Dropout, Fully-Connected Layer로 구성 
@@ -21,7 +21,7 @@
 
 ### GRU
 
-<p align="center"><img src="img/gru.png"></p>
+<p align="center"><img src="img/gru.png" width="300"></p>
 
 - GRU 모델은 LSTM보다 계산량을 줄인 모델 
 - GRU Layer, Dropout, Fully-Connected Layer로 구성 
@@ -29,7 +29,7 @@
 
 ### 스태킹 모델
 
-<p align="center"><img src="img/stacking.png"></p>
+<p align="center"><img src="img/stacking.png" width="400"></p>
 
 - 스태킹(Stacking): 여러 베이스 모델에서 예측하여 나온 결과 값을 스태킹 모델에 입력으로 하여 다시 모델을 학습시키는 기법 
 - 베이스 모델: CNN, LSTM, GRU 모델 사용 
