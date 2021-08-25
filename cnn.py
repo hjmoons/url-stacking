@@ -16,7 +16,7 @@ class UrlCNN:
         self.model = self.cnn()
 
     @staticmethod
-    def cnn(max_len=80, emb_dim=32, max_vocab_len=128, W_reg=regularizers.l2(1e-4)):
+    def model(max_len=80, emb_dim=32, max_vocab_len=128, W_reg=regularizers.l2(1e-4)):
         # Input
         input = Input(shape=(max_len,), dtype='int32', name='cnn_input')
 

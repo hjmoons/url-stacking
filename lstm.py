@@ -11,7 +11,7 @@ class UrlLSTM:
         self.model = self.lstm()
 
     @staticmethod
-    def lstm(max_len=80, emb_dim=32, max_vocab_len=128, W_reg=regularizers.l2(1e-4)):
+    def model(max_len=80, emb_dim=32, max_vocab_len=128, W_reg=regularizers.l2(1e-4)):
         input = Input(shape=(max_len,), dtype='int32', name='lstm_input')
 
         emb = Embedding(input_dim=max_vocab_len, output_dim=emb_dim, input_length=max_len, embeddings_regularizer=W_reg)(input)
