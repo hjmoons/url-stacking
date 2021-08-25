@@ -11,7 +11,7 @@ from keras.layers import concatenate
 from keras.optimizers import Adam
 from keras.models import model_from_json
 
-from model_preprocessor import Preprocessor
+from preprocessor import Preprocessor
 
 warnings.filterwarnings("ignore")
 
