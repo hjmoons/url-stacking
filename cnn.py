@@ -13,10 +13,10 @@ warnings.filterwarnings("ignore")
 
 class UrlCNN:
     def __init__(self):
-        self.model = self.cnn()
+        self.model = self.layer()
 
     @staticmethod
-    def model(max_len=80, emb_dim=32, max_vocab_len=128, W_reg=regularizers.l2(1e-4)):
+    def layer(max_len=80, emb_dim=32, max_vocab_len=128, W_reg=regularizers.l2(1e-4)):
         # Input
         input = Input(shape=(max_len,), dtype='int32', name='cnn_input')
 
@@ -75,12 +75,9 @@ class UrlCNN:
 
         model = Model(input, output)
 
-        return model
+        model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
 
-    def train(self, x_train, y_train, epochs, batch_size):
-        adam = Adam(lr=1e-4, beta_1=0.9, beta_2=0.999, epsilon=1e-08, decay=0.0)
-        self.model.compile(optimizer=adam, loss='binary_crossentropy', metrics=['accuracy'])
-        self.model.fit(x_train, y_train, epochs=epochs, batch_size=batch_size, validation_split=0.11)
+        return model
 
     def save(self):
         model_json = self.model.to_json()
