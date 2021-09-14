@@ -1,23 +1,15 @@
 # Load Libraries
-import os
 import warnings
-import json
 import numpy as np
-from pathlib import Path
 
-from keras.models import Model
-from keras.layers.core import Dense
-from keras.layers import concatenate
-from keras.optimizers import Adam
-from keras.models import model_from_json
+from tensorflow.keras.models import Model
+from tensorflow.keras.layers import Dense, Input
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import KFold
-from tensorflow.python.keras import Input
 
 from cnn import UrlCNN
 from gru import UrlGRU
 from lstm import UrlLSTM
-from preprocessor import Preprocessor
 
 warnings.filterwarnings("ignore")
 
@@ -31,7 +23,7 @@ class UrlStacking:
 
     @staticmethod
     def model():
-        input = Input(shape=(2,), dtype='int32', name='cnn_input')
+        input = Input(shape=(3,), dtype='int32', name='cnn_input')
         hidden = Dense(10, activation='relu')(input)
         output = Dense(1, activation='sigmoid', name='final_output')(hidden)
         model = Model(input, output)
@@ -63,12 +55,12 @@ class UrlStacking:
     def train(self, x_train, y_train, x_test, y_test, n_splits):
         cnn_train, cnn_test = self.get_stacking_data(self.cnn.model, x_train, y_train, x_test, n_splits)
         lstm_train, lstm_test = self.get_stacking_data(self.lstm.model, x_train, y_train, x_test, n_splits)
-        #gru_train, gru_test = self.get_stacking_data(self.gru.model, x_train, y_train, x_test, n_splits)
+        gru_train, gru_test = self.get_stacking_data(self.gru.model, x_train, y_train, x_test, n_splits)
 
-        #stack_final_x_train = np.concatenate((cnn_train, lstm_train, gru_train), axis=1)
-        #stack_final_x_test = np.concatenate((cnn_test, lstm_test, gru_test), axis=1)
-        stack_final_x_train = np.concatenate((cnn_train, lstm_train), axis=1)
-        stack_final_x_test = np.concatenate((cnn_test, lstm_test), axis=1)
+        stack_final_x_train = np.concatenate((cnn_train, lstm_train, gru_train), axis=1)
+        stack_final_x_test = np.concatenate((cnn_test, lstm_test, gru_test), axis=1)
+        #stack_final_x_train = np.concatenate((cnn_train, lstm_train), axis=1)
+        #stack_final_x_test = np.concatenate((cnn_test, lstm_test), axis=1)
 
         self.stack_model.fit(stack_final_x_train, y_train, epochs=15, batch_size=64)
         stack_final = self.stack_model(stack_final_x_test)
