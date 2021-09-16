@@ -26,7 +26,7 @@ class Preprocessor:
         train_half = int(train_num/2)
         
         # Load data
-        data_home = 'data/'
+        data_home = '../../data/'
         df = pd.read_csv(data_home + 'url_label.csv', encoding='ISO-8859-1', sep=',')
         
         class_0 = df['class'] == 0

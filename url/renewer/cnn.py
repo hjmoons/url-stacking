@@ -11,11 +11,6 @@ from keras.optimizers import Adam
 from model_evaluator import Evaluator
 from model_preprocessor import Preprocessor
 
-warnings.filterwarnings("ignore")
-config = tf.ConfigProto()
-config.gpu_options.per_process_gpu_memory_fraction = 0.9
-K.tensorflow_backend.set_session(tf.Session(config=config))
-
 def cnn(max_len=80, emb_dim=32, max_vocab_len=128, W_reg=regularizers.l2(1e-4)):
     """CNN model with the Keras functional API"""
 
@@ -83,12 +78,13 @@ epochs = 15
 batch_size = 64
 adam = Adam(lr=1e-4, beta_1=0.9, beta_2=0.999, epsilon=1e-08, decay=0.0)
 model.compile(optimizer=adam, loss='binary_crossentropy',
-              metrics=['accuracy', tf.keras.metrics.BinaryAccuracy(),
-                       Evaluator.precision, Evaluator.recall, Evaluator.fmeasure])
-
-history = model.fit(x_train, y_train, epochs=epochs, batch_size=batch_size, validation_split=0.11)
-
+              metrics=['accuracy'])
+                         
+#with K.tensorflow_backend.set_session(sess):
+model.fit(x_train, y_train, epochs=epochs, batch_size=batch_size, validation_split=0.11)
+  
 model_json = model.to_json()
+
 with open("./saved_model/cnn.json", "w") as json_file:
     json_file.write(model_json)
 model.save_weights("./saved_model/cnn.h5")

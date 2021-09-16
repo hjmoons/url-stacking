@@ -41,8 +41,7 @@ batch_size = 64
 model = lstm()
 adam = Adam(lr=1e-4, beta_1=0.9, beta_2=0.999, epsilon=1e-08, decay=0.0)
 model.compile(optimizer=adam, loss='binary_crossentropy',
-              metrics=['accuracy', tf.keras.metrics.BinaryAccuracy(),
-                       Evaluator.precision, Evaluator.recall, Evaluator.fmeasure])
+              metrics=['accuracy'])
 
 model.fit(x_train, y_train, epochs=epochs, batch_size=batch_size, validation_split=0.11)
 
