@@ -6,12 +6,7 @@ from keras.layers import Embedding, LSTM
 from keras.layers.core import Dense, Dropout, Flatten
 
 
-class UrlLSTM:
-    def __init__(self):
-        pass
-
-    @staticmethod
-    def lstm(max_len=80, emb_dim=32, max_vocab_len=128, W_reg=regularizers.l2(1e-4)):
+def define_model(max_len=80, emb_dim=32, max_vocab_len=128, W_reg=regularizers.l2(1e-4)):
         """LSTM with Attention model with the Keras Sequential model"""
 
         input = Input(shape=(max_len,), dtype='int32', name='lstm_input')
@@ -29,5 +24,7 @@ class UrlLSTM:
         output = Dense(1, activation='sigmoid', name='lstm_output')(h1)
 
         model = Model(input=[input], output=[output])
+
+        model.compile(optimizer='adam', loss='binary_crossentropy',metrics=['accuracy'])
 
         return model
