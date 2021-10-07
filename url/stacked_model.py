@@ -2,7 +2,7 @@
 import tensorflow as tf
 from keras import backend as K
 
-from preprocessor import Preprocessor
+import preprocessor
 
 import warnings
 
@@ -60,19 +60,24 @@ config = tf.ConfigProto()
 config.gpu_options.per_process_gpu_memory_fraction = 0.9
 K.tensorflow_backend.set_session(tf.Session(config=config))
 
-epochs = 5
+epochs = 1
 batch_size = 64
 
 # Load data
-x_train, x_test, y_train, y_test = Preprocessor.load_data_binary(10000)
+x_train, x_test, y_train, y_test = preprocessor.load_data_binary(10000)
 
 models = list()
 
 models.append(cnn.define_model())
+models.append(cnn.define_model())
+models.append(cnn.define_model())
+models.append(cnn.define_model())
+models.append(lstm.define_model())
 models.append(lstm.define_model())
 models.append(gru.define_model())
+models.append(gru.define_model())
 
-acc_dict = {}
+acc_list = list()
 
 print()
 print("Start base model training!!!!")
@@ -84,7 +89,7 @@ for model in models:
     #model.predict(x_test, verbose=0)
 
     _, acc = model.evaluate(x_test, y_test, verbose=0)
-    acc_dict[model.input[:-5]] = acc
+    acc_list.append(acc)
 
 print()
 print("Complete base model training!!!!")
@@ -99,14 +104,14 @@ fit_stacked_model(stacked_model, x_train, y_train)
 
 X = [x_test for _ in range(len(stacked_model.input))]
 _, acc = stacked_model.evaluate(X, y_test, verbose=0)
-acc_dict['stacked'] = acc
+acc_list.append(acc)
 
 print()
 print("Complete stacking model training!!!!")
 print()
 
 print('Model Accuracy')
-print(acc_dict)
+print(acc_list)
 
 '''
 from keras import backend as K
