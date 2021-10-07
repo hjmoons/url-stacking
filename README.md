@@ -35,6 +35,13 @@
 - 베이스 모델: CNN, LSTM, GRU 모델 사용 
 - 베이스 모델에서 예측한 결과 값을 입력으로 하여 Fully-Connected Layer로 구성된 스태킹 모델 학습
 
+## 성능(정확도)
+```
+CNN 0.899
+LSTM 0.951
+GRU 0.949
+Stacking 0.955
+```
 ## 버젼
 ```
 tensorflow 1.13.1
