@@ -13,12 +13,6 @@ from keras.layers import concatenate
 import cnn, gru, lstm
 
 
-warnings.filterwarnings("ignore")
-config = tf.ConfigProto()
-config.gpu_options.per_process_gpu_memory_fraction = 0.9
-K.tensorflow_backend.set_session(tf.Session(config=config))
-
-
 def define_stacked_model(models):
     # update all layers in all models to not be trainable
     for i in range(len(models)):
@@ -44,13 +38,13 @@ def define_stacked_model(models):
 
 
 # fit a stacked model
-def fit_stacked_model(model, inputX, inputy):
+def fit_stacked_model(model, inputX, inputy, epochs=5, batch_size=64):
     # prepare input data
     X = [inputX for _ in range(len(model.input))]
     # encode output data
 
     # fit model
-    model.fit(X, inputy, epochs=10, batch_size=64)
+    model.fit(X, inputy, epochs=epochs, batch_size=batch_size)
 
 
 # make a prediction with a stacked model
@@ -60,6 +54,11 @@ def predict_stacked_model(model, inputX):
     # make prediction
     return model.predict(X, verbose=0)
 
+
+warnings.filterwarnings("ignore")
+config = tf.ConfigProto()
+config.gpu_options.per_process_gpu_memory_fraction = 0.9
+K.tensorflow_backend.set_session(tf.Session(config=config))
 
 epochs = 5
 batch_size = 64
@@ -79,42 +78,37 @@ print()
 print("Start base model training!!!!")
 print()
 
+# train and evaluate base models
 for model in models:
     model.fit(x_train, y_train, epochs=epochs, batch_size=batch_size, validation_split=0.11)
-    model.predict(x_test, verbose=0)
+    #model.predict(x_test, verbose=0)
 
     _, acc = model.evaluate(x_test, y_test, verbose=0)
     acc_dict[model.input[:-5]] = acc
 
 print()
 print("Complete base model training!!!!")
+print()
 print("Start stacking model training!!!!")
 print()
 
-# define ensemble model
+# train and evaluate stacking ensemble model
 stacked_model = define_stacked_model(models)
 fit_stacked_model(stacked_model, x_train, y_train)
-stacked_pred = stacked_model.predict_stacked_model(stacked_model, x_test)
+#stacked_pred = predict_stacked_model(stacked_model, x_test)
 
 X = [x_test for _ in range(len(stacked_model.input))]
 _, acc = stacked_model.evaluate(X, y_test, verbose=0)
 acc_dict['stacked'] = acc
 
-
+print()
+print("Complete stacking model training!!!!")
+print()
 
 print('Model Accuracy')
 print(acc_dict)
 
-# Save test result
 '''
-from sklearn.metrics import classification_report
-
-print(classification_report(y_test, cnn_pred.round(), target_names=['benign', 'malicious']))
-print(classification_report(y_test, lstm_pred.round(), target_names=['benign', 'malicious']))
-print(classification_report(y_test, gru_pred.round(), target_names=['benign', 'malicious']))
-print(classification_report(y_test, stacked_pred.round(), target_names=['benign', 'malicious']))
-'''
-
 from keras import backend as K
 
 sess = K.get_session()
@@ -126,3 +120,4 @@ builder.add_meta_graph_and_variables(sess, [tf.saved_model.tag_constants.SERVING
 builder.save()
 
 print(stacked_model.input)
+'''
