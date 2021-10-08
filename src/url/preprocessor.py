@@ -5,7 +5,7 @@ from string import printable
 from keras.preprocessing import sequence
 
 
-def load_data_binary(data_num):
+def load_data_binary(data_num, data_path):
     """ Load and pre-process data.
 
     1) Load data from dir
@@ -20,8 +20,9 @@ def load_data_binary(data_num):
     train_half = int(train_num/2)
 
     # Load data
-    data_home = '../data/'
-    df = pd.read_csv(data_home + 'url_label.csv', encoding='ISO-8859-1', sep=',')
+    # data_home = '../data/'
+    # df = pd.read_csv(data_home + 'url_label.csv', encoding='ISO-8859-1', sep=',')
+    df = pd.read_csv(data_path, encoding='ISO-8859-1', sep=',')
 
     class_0 = df['class'] == 0
     class_1 = df['class'] != 0
