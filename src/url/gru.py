@@ -1,4 +1,6 @@
 # Load Libraries
+import os
+
 from keras import regularizers
 from keras.layers import Input
 from keras.models import Model
@@ -28,3 +30,21 @@ def define_model(max_len=80, emb_dim=32, max_vocab_len=128, W_reg=regularizers.l
     model.compile(optimizer='adam', loss='binary_crossentropy',metrics=['accuracy'])
 
     return model
+
+
+# 모델을 저장하지 않는 경우 사용
+def train_model(x_train, y_train, epochs, batch_size):
+    # Define Deep Learning Model
+    model = define_model()
+    model.fit(x_train, y_train, epochs=epochs, batch_size=batch_size, validation_split=0.11)
+    return model
+
+
+def save_model(x_train, y_train, epochs=5, batch_size=64, export_path='./output/gru'):
+    model = train_model(x_train, y_train, epochs=epochs, batch_size=batch_size)
+    model_json = model.to_json()
+    if not os.path.exists(export_path):
+        os.makedirs(export_path)
+    with open(export_path + "/gru.json", "w") as json_file:
+        json_file.write(model_json)
+    model.save_weights(export_path + "/gru.h5")

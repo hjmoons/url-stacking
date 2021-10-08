@@ -1,16 +1,26 @@
 # Load Libraries
+import json, os, warnings
+from pathlib import Path
+
 import tensorflow as tf
 from keras import backend as K
-
-import preprocessor
-
-import warnings
-
-from keras.models import Model
+from keras.models import Model, model_from_json
 from keras.layers.core import Dense
 from keras.layers import concatenate
 
 import cnn, gru, lstm
+from src import preprocessor
+
+warnings.filterwarnings("ignore")
+
+
+def load_models(fileModelJSON, fileWeights):
+    with open(fileModelJSON, 'r') as f:
+        model_json = f.read()
+        model = model_from_json(model_json)
+        f.close()
+    model.load_weights(fileWeights)
+    return model
 
 
 def define_stacked_model(models):
@@ -55,9 +65,21 @@ def predict_stacked_model(model, inputX):
     return model.predict(X, verbose=0)
 
 
-warnings.filterwarnings("ignore")
+def set_base_model(models_dir='./output'):
+    models = list()
+
+    CNNmodel = load_models(str(models_dir + "/cnn/cnn.json", 'utf8'), str(models_dir + "/cnn/cnn.h5", 'utf8'))
+    LSTMmodel = load_models(models_dir + "/lstm/lstm.json", models_dir + "/lstm/lstm.h5")
+    GRUmodel = load_models(models_dir + "/gru/gru.json", models_dir + "/gru/gru.h5")
+
+    models.append(CNNmodel.compile(optimizer='adam', loss='binary_crossentropy',metrics=['accuracy']))
+    models.append(LSTMmodel.compile(optimizer='adam', loss='binary_crossentropy',metrics=['accuracy']))
+    models.append(GRUmodel.compile(optimizer='adam', loss='binary_crossentropy',metrics=['accuracy']))
+
+    return models
+
+
 config = tf.ConfigProto()
-config.gpu_options.per_process_gpu_memory_fraction = 0.9
 K.tensorflow_backend.set_session(tf.Session(config=config))
 
 epochs = 1
@@ -66,23 +88,25 @@ batch_size = 64
 # Load data
 x_train, x_test, y_train, y_test = preprocessor.load_data_binary(10000)
 
+'''
 models = list()
 
 models.append(cnn.define_model())
-models.append(cnn.define_model())
-models.append(cnn.define_model())
-models.append(cnn.define_model())
 models.append(lstm.define_model())
-models.append(lstm.define_model())
-models.append(gru.define_model())
 models.append(gru.define_model())
 
 acc_list = list()
+'''
 
 print()
 print("Start base model training!!!!")
 print()
 
+#cnn.save_model(x_train, y_train, epochs=1)
+#lstm.save_model(x_train, y_train, epochs=1)
+#gru.save_model(x_train, y_train, epochs=1)
+
+'''
 # train and evaluate base models
 for model in models:
     model.fit(x_train, y_train, epochs=epochs, batch_size=batch_size, validation_split=0.11)
@@ -90,7 +114,7 @@ for model in models:
 
     _, acc = model.evaluate(x_test, y_test, verbose=0)
     acc_list.append(acc)
-
+'''
 print()
 print("Complete base model training!!!!")
 print()
@@ -98,31 +122,28 @@ print("Start stacking model training!!!!")
 print()
 
 # train and evaluate stacking ensemble model
-stacked_model = define_stacked_model(models)
-fit_stacked_model(stacked_model, x_train, y_train)
+stacked_model = define_stacked_model(set_base_model())
+fit_stacked_model(stacked_model, x_train, y_train, epochs=1)
 #stacked_pred = predict_stacked_model(stacked_model, x_test)
 
 X = [x_test for _ in range(len(stacked_model.input))]
 _, acc = stacked_model.evaluate(X, y_test, verbose=0)
-acc_list.append(acc)
+#acc_list.append(acc)
 
 print()
 print("Complete stacking model training!!!!")
 print()
 
-print('Model Accuracy')
-print(acc_list)
+#print('Model Accuracy')
+#print(acc_list)
 
-'''
 from keras import backend as K
 
 sess = K.get_session()
 init = tf.global_variables_initializer()
 sess.run(init)
 
-builder = tf.saved_model.builder.SavedModelBuilder("./output/model")
+builder = tf.saved_model.builder.SavedModelBuilder("./output/stacking")
 builder.add_meta_graph_and_variables(sess, [tf.saved_model.tag_constants.SERVING])
 builder.save()
 
-print(stacked_model.input)
-'''
