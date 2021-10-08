@@ -68,7 +68,7 @@ def predict_stacked_model(model, inputX):
 def set_base_model(models_dir='./output'):
     models = list()
 
-    CNNmodel = load_models(str(models_dir + "/cnn/cnn.json", 'utf8'), str(models_dir + "/cnn/cnn.h5", 'utf8'))
+    CNNmodel = load_models(models_dir + "/cnn/cnn.json", models_dir + "/cnn/cnn.h5")
     LSTMmodel = load_models(models_dir + "/lstm/lstm.json", models_dir + "/lstm/lstm.h5")
     GRUmodel = load_models(models_dir + "/gru/gru.json", models_dir + "/gru/gru.h5")
 
