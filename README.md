@@ -37,10 +37,17 @@
 
 ## 성능(정확도)
 ```
-CNN 0.9355
-LSTM 0.9685
-GRU 0.96
-Stacking 0.9715
+URL Accuracy
+- CNN 0.9355
+- LSTM 0.9685
+- GRU 0.96
+- Stacking 0.9715
+
+DGA Accuracy
+- CNN 0.9337
+- LSTM 0.9552
+- GRU 0.9501
+- Stacking 0.959
 ```
 ## 버젼
 ```
