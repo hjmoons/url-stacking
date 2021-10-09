@@ -8,7 +8,7 @@ from keras.preprocessing.text import Tokenizer
 from keras.utils import np_utils
 
 
-def load_data_sample():
+def load_data_sample(data_num, data_path):
     """ Load and pre-process data.
 
     1) Load data from dir
@@ -20,14 +20,15 @@ def load_data_sample():
     """
 
     # Load data
-    data_home = 'data/'
-    df = pd.read_csv(data_home + 'dga_label.csv', encoding='ISO-8859-1', sep=',')
+    df = pd.read_csv(data_path, encoding='ISO-8859-1', sep=',')
 
     data = pd.DataFrame(columns=['domain', 'source', 'class'])
 
+    sample_num = int(data_num / 21)
+
     for i in range(0, 21):
         class_ = df['class'] == i
-        data = pd.concat([data, df[class_].sample(2000)])
+        data = pd.concat([data, df[class_].sample(sample_num)])
 
     # Tokenizing domain string on character level
     # domain string to vector
@@ -37,7 +38,7 @@ def load_data_sample():
 
     # Padding domain integer max_len=64
     # 최대길이 73으로 지정
-    max_len = 74
+    max_len = 73
 
     x = sequence.pad_sequences(url_int_tokens, maxlen=max_len)
     y = np.array(data['class'])
@@ -61,6 +62,7 @@ def load_data_sample():
     return x_train, x_test, y_train_category, y_test_category
 
 
+# for train stacking model
 def load_data(data_path):
     """ Load and pre-process data.
     1) Load data from dir

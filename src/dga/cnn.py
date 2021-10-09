@@ -63,7 +63,7 @@ def define_model(max_len=73, emb_dim=32, max_vocab_len=40, W_reg=regularizers.l2
 
     model = Model(input=[main_input], output=[output])
 
-    model.compile(optimizer='adam', loss='categorical_crossentropy',metrics=['accuracy'])
+    model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
     return model
 
@@ -76,11 +76,14 @@ def train_model(x_train, y_train, epochs, batch_size):
     return model
 
 
-def save_model(x_train, y_train, epochs=5, batch_size=64, export_path='./output/cnn'):
+def save_model(x_train, y_train, x_test, y_test, epochs=5, batch_size=64, export_path='./output/cnn'):
     model = train_model(x_train, y_train, epochs=epochs, batch_size=batch_size)
+    _, acc = model.evaluate(x_test, y_test, verbose=0)
     model_json = model.to_json()
     if not os.path.exists(export_path):
         os.makedirs(export_path)
     with open(export_path + "/cnn.json", "w") as json_file:
         json_file.write(model_json)
     model.save_weights(export_path + "/cnn.h5")
+
+    return acc

@@ -105,13 +105,9 @@ def train_base_models(data_num, data_path, epochs=5):
     if Path('./output/lstm').is_dir():  os.remove('./output/lstm')
     if Path('./output/gru').is_dir():   os.remove('./output/gru')
 
-    cnn.save_model(x_train, y_train, epochs=epochs)
-    lstm.save_model(x_train, y_train, epochs=epochs)
-    gru.save_model(x_train, y_train, epochs=epochs)
-
-    for model in models:
-        _, acc = model.evaluate(x_test, y_test, verbose=0)
-    acc_list.append(acc)
+    acc_list.append(cnn.save_model(x_train, y_train, x_test, y_test, epochs=epochs))
+    acc_list.append(lstm.save_model(x_train, y_train, x_test, y_test, epochs=epochs))
+    acc_list.append(gru.save_model(x_train, y_train, x_test, y_test, epochs=epochs))
 
     return acc_list
 

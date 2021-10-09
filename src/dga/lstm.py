@@ -30,11 +30,15 @@ def train_model(x_train, y_train, epochs, batch_size):
         return model
 
 
-def save_model(x_train, y_train, epochs=5, batch_size=64, export_path='./output/lstm'):
+def save_model(x_train, y_train, x_test, y_test, epochs=5, batch_size=64, export_path='./output/lstm'):
         model = train_model(x_train, y_train, epochs=epochs, batch_size=batch_size)
+        _, acc = model.evaluate(x_test, y_test, verbose=0)
         model_json = model.to_json()
         if not os.path.exists(export_path):
                 os.makedirs(export_path)
         with open(export_path + "/lstm.json", "w") as json_file:
                 json_file.write(model_json)
         model.save_weights(export_path + "/lstm.h5")
+
+        return acc
+
