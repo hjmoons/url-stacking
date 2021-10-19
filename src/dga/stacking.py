@@ -81,14 +81,14 @@ def set_base_models(models_dir='./output'):
     CNNmodel = load_models(models_dir + "/cnn/cnn.json", models_dir + "/cnn/cnn.h5")
     LSTMmodel = load_models(models_dir + "/lstm/lstm.json", models_dir + "/lstm/lstm.h5")
     GRUmodel = load_models(models_dir + "/gru/gru.json", models_dir + "/gru/gru.h5")
-    #BiGRUmodel = load_models(models_dir + "/bigru/bigru.json", models_dir + "/bigru/bigru.h5")
-    #BiLSTMmodel = load_models(models_dir + "/bilstm/bilstm.json", models_dir + "/bilstm/bilstm.h5")
+    BiGRUmodel = load_models(models_dir + "/bigru/bigru.json", models_dir + "/bigru/bigru.h5")
+    BiLSTMmodel = load_models(models_dir + "/bilstm/bilstm.json", models_dir + "/bilstm/bilstm.h5")
 
     CNNmodel.compile(optimizer='adam', loss='binary_crossentropy',metrics=['accuracy'])
     LSTMmodel.compile(optimizer='adam', loss='binary_crossentropy',metrics=['accuracy'])
     GRUmodel.compile(optimizer='adam', loss='binary_crossentropy',metrics=['accuracy'])
-    #BiGRUmodel.compile(optimizer='adam', loss='binary_crossentropy',metrics=['accuracy'])
-    #BiLSTMmodel.compile(optimizer='adam', loss='binary_crossentropy',metrics=['accuracy'])
+    BiGRUmodel.compile(optimizer='adam', loss='binary_crossentropy',metrics=['accuracy'])
+    BiLSTMmodel.compile(optimizer='adam', loss='binary_crossentropy',metrics=['accuracy'])
 
     models.append(CNNmodel)
     models.append(LSTMmodel)
@@ -107,14 +107,14 @@ def train_base_models(data_path, epochs=5):
     if Path('./output/cnn').is_dir():   os.remove('./output/cnn')
     if Path('./output/lstm').is_dir():  os.remove('./output/lstm')
     if Path('./output/gru').is_dir():   os.remove('./output/gru')
-    #if Path('./output/bilstm').is_dir():  os.remove('./output/bilstm')
-    #if Path('./output/bigru').is_dir():   os.remove('./output/bigru')
+    if Path('./output/bilstm').is_dir():  os.remove('./output/bilstm')
+    if Path('./output/bigru').is_dir():   os.remove('./output/bigru')
 
     acc_list.append(cnn.save_model(x_train, y_train, x_test, y_test, epochs=epochs))
     acc_list.append(lstm.save_model(x_train, y_train, x_test, y_test, epochs=epochs))
     acc_list.append(gru.save_model(x_train, y_train, x_test, y_test, epochs=epochs))
-    #acc_list.append(bilstm.save_model(x_train, y_train, x_test, y_test, epochs=epochs))
-    #acc_list.append(bigru.save_model(x_train, y_train, x_test, y_test, epochs=epochs))
+    acc_list.append(bilstm.save_model(x_train, y_train, x_test, y_test, epochs=epochs))
+    acc_list.append(bigru.save_model(x_train, y_train, x_test, y_test, epochs=epochs))
 
     return acc_list
 
