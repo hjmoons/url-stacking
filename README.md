@@ -12,7 +12,7 @@
 |<strong>GRU</strong><br><p align="center"><img src="img/gru.png" width="300"></p>|- GRU 모델은 LSTM보다 계산량을 줄인 모델<br>- GRU Layer, Dropout, Fully-Connected Layer로 구성<br>- GRU Layer 출력 차원: 128, Dropout 비율: 0.5|
 |<strong>FINAL</strong><br><p align="center"><img src="img/stacking.png" width="400"></p>|- 스태킹(Stacking): 여러 베이스 모델에서 예측하여 나온 결과 값을 스태킹 모델에 입력으로 하여 다시 모델을 학습시키는 기법<br>- 베이스 모델: CNN, LSTM, GRU 모델 사용<br>- 베이스 모델에서 예측한 결과 값을 입력으로 하여 Fully-Connected Layer로 구성된 스태킹 모델 학습|
 
-## 성능(Accuracy)
+## Accuracy
 
 <table>
     <td>Data</td>
@@ -54,7 +54,7 @@
     </tr>
 </table>
 
-## 버젼
+## Version
 ```
 tensorflow 1.13.1
 keras 2.2.4
